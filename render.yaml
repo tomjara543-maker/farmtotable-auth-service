@@ -1,0 +1,26 @@
+services:
+  - type: web
+    name: farmtotable-auth-service
+    runtime: docker
+    region: virginia
+    plan: free
+    healthCheckPath: /health
+    envVars:
+      - key: SERVICE_NAME
+        value: auth-service
+      - key: DATABASE_URL
+        sync: false
+      - key: RABBITMQ_URL
+        sync: false
+      - key: INTERNAL_TOKEN
+        sync: false
+      - key: JWT_SECRET
+        sync: false
+      - key: ACCESS_TOKEN_TTL
+        sync: false
+      - key: REFRESH_TOKEN_DAYS
+        sync: false
+      - key: ADMIN_EMAIL
+        sync: false
+      - key: ADMIN_PASSWORD
+        sync: false
