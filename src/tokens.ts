@@ -13,10 +13,11 @@ const sha256 = (value: string) => createHash("sha256").update(value).digest("hex
 
 export const publicUser = ({ id, email, name, role, createdAt, active }: User) => ({ id, email, name, role, createdAt, active });
 
+export const signAccessToken = (user: Pick<User, "id" | "role" | "email" | "name">) =>
+  jwt.sign({ sub: user.id, role: user.role, email: user.email, name: user.name }, JWT_SECRET, { expiresIn: ACCESS_TTL });
+
 export async function issueTokens(user: User) {
-  const accessToken = jwt.sign({ sub: user.id, role: user.role, email: user.email, name: user.name }, JWT_SECRET, {
-    expiresIn: ACCESS_TTL,
-  });
+  const accessToken = signAccessToken(user);
   const refreshToken = randomBytes(48).toString("base64url");
   await prisma.refreshToken.create({
     data: {

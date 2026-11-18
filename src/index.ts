@@ -1,9 +1,7 @@
 import bcrypt from "bcryptjs";
-import cors from "cors";
-import express from "express";
+import { createApp } from "./app";
 import { prisma } from "./db";
 import { connectEvents, publish } from "./events";
-import { authRoutes } from "./routes";
 
 const PORT = Number(process.env.PORT ?? 4009);
 
@@ -23,14 +21,7 @@ async function main() {
   await connectEvents();
   await ensureAdmin();
 
-  const app = express();
-  app.use(cors());
-  app.use(express.json());
-
-  app.get("/health", (_req, res) => res.json({ service: "auth-service", status: "ok" }));
-  app.use("/auth", authRoutes());
-
-  app.listen(PORT, () => console.log(`auth-service escuchando en http://localhost:${PORT}`));
+  createApp().listen(PORT, () => console.log(`auth-service escuchando en http://localhost:${PORT}`));
 }
 
 main();
